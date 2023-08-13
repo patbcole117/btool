@@ -20,15 +20,13 @@ main() {
     git add .
 
     if [[ ${msg} != '' ]]; then
-    #    echo "\"${msg}\""
         git commit -a -m "${msg}"
-    #    git push
+        git push
     fi
 
     if [[ ${tag} != '' ]]; then
-        echo ${tag}
-    #    git tag ${tag}
-    #    git push origin ${tag}
+        git tag "${tag}"
+        git push origin "${tag}"
     fi
     exit 0
 }   
