@@ -1,44 +1,56 @@
 # btool
-A tool for creating binary files from strings and encrypting them.
-Converts a string byte sequence to bytes.
-Converts files of bytes to strings.
+A tool for creating binary files.
 
-Reads from stdin or file.
+Examples:
 
-Encryption/Decryption
+1)
+./btool -b "\x41\x41\x41\x41\x41\x41\x41\x41"
+[+] Read 8 bytes from stdin.
 
-output to stdout or file
+\x41\x41\x41\x41\x41\x41\x41\x41
 
-default: reads from stdin outputs to stdin.
 
--f <inputfile>
+2)
+./btool -b "\x41\x41\x41\x41\x41\x41\x41\x41" -o A.txt
+[+] Read 8 bytes from stdin.
 
--o < outfile>
+\x41\x41\x41\x41\x41\x41\x41\x41
 
--e <algorithm>
+[+] Wrote 8 bytes to A.txt.
 
--d <algorithm>
 
-Read from stdin and output to out.bin
-btool "\x41\x41\x41\x41\x41\x41\x41\x41\x41"
+3)
+./btool -i A.txt
+[+] Read 8 bytes from A.txt.
 
-Read from file encrypt with xor
-btool -f test.txt  -e xor
+\x41\x41\x41\x41\x41\x41\x41\x41
 
-btool -f out.bin -d xor
 
-func str2byte
+4)
+./btool -i A.txt -o AAAAAAAA.txt
+[+] Read 8 bytes from A.txt.
 
-func byte2Str
+\x41\x41\x41\x41\x41\x41\x41\x41
 
-func eXor
+[+] Wrote 8 bytes to AAAAAAAA.txt.
 
-func dXor
 
-func toStdin()
+5) 
+./btool -b $(python3 -c 'print("\x41"*8 + "\x42"*8 + "\x43"*8 + "\x44"*8 + "\x45"*8 )') -o ABCDE.txt -c 4
+[+] Read 40 bytes from stdin.
 
-func toFile
+\x41\x41\x41\x41
+\x41\x41\x41\x41
+\x42\x42\x42\x42
+\x42\x42\x42\x42
+\x43\x43\x43\x43
+\x43\x43\x43\x43
+\x44\x44\x44\x44
+\x44\x44\x44\x44
+\x45\x45\x45\x45
+\x45\x45\x45\x45
 
-func fromFile()
+[+] Wrote 40 bytes to ABCDE.txt.
 
-func fromStdin()
+6)
+TODO: Encryption.

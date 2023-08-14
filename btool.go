@@ -9,12 +9,12 @@ import (
 )
 
 
-var pbool_help   = flag.Bool("h", false, "Display usage information.")
-var pstr_bytes   = flag.String("b", "", "A string of bytes: \x41, 0x41, 65")
-var pstr_inFile  = flag.String("i", "", "Read from the provided file.")
-var pstr_outFile = flag.String("o", "", "Write to the provided file.")
-var pint_col     = flag.Int("c", 16, "Output columns. Default: 16.")
-var pstr_enc     = flag.String("e", "", "Encrypt: xor")
+var pbool_help   = flag.Bool("h", false, "Display usage.")
+var pstr_bytes   = flag.String("b", "", "A string of bytes: \"\\x41\\x42...\"")
+var pstr_inFile  = flag.String("i", "", "Read bytes from file.")
+var pstr_outFile = flag.String("o", "", "Output to file.")
+var pint_col     = flag.Int("c", 16, "Output columns.")
+var pstr_enc     = flag.String("e", "", "Encrypt: xor.")
 var pstr_dec     = flag.String("d", "", "Decrypt: xor.")
 
 func main() {
