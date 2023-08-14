@@ -1,56 +1,69 @@
 # btool
 A tool for creating binary files.
 
-Examples:
+#######################################################\
+Examples:\
+#######################################################\
++-+-+-+-+-+-++-+-+-+-+-+-+-+-+-+-+-+-++-+-+-+-+-+-+-+-+-+-+
 
-1)
-./btool -b "\x41\x41\x41\x41\x41\x41\x41\x41"
+./btool -b "\x41\x41\x41\x41\x41\x41\x41\x41"\
 [+] Read 8 bytes from stdin.
+
 
 \x41\x41\x41\x41\x41\x41\x41\x41
 
 
-2)
-./btool -b "\x41\x41\x41\x41\x41\x41\x41\x41" -o A.txt
++-+-+-+-+-+-++-+-+-+-+-+-+-+-+-+-+-+-++-+-+-+-+-+-+-+-+-+-+\
+
+./btool -b "\x41\x41\x41\x41\x41\x41\x41\x41" -o A.txt\
 [+] Read 8 bytes from stdin.
 
+
 \x41\x41\x41\x41\x41\x41\x41\x41
+
 
 [+] Wrote 8 bytes to A.txt.
 
 
-3)
-./btool -i A.txt
++-+-+-+-+-+-++-+-+-+-+-+-+-+-+-+-+-+-++-+-+-+-+-+-+-+-+-+-+\
+
+./btool -i A.txt\
 [+] Read 8 bytes from A.txt.
+
 
 \x41\x41\x41\x41\x41\x41\x41\x41
 
 
-4)
-./btool -i A.txt -o AAAAAAAA.txt
++-+-+-+-+-+-++-+-+-+-+-+-+-+-+-+-+-+-++-+-+-+-+-+-+-+-+-+-+\
+
+./btool -i A.txt -o AAAAAAAA.txt\
 [+] Read 8 bytes from A.txt.
 
+
 \x41\x41\x41\x41\x41\x41\x41\x41
+
 
 [+] Wrote 8 bytes to AAAAAAAA.txt.
 
 
-5) 
-./btool -b $(python3 -c 'print("\x41"*8 + "\x42"*8 + "\x43"*8 + "\x44"*8 + "\x45"*8 )') -o ABCDE.txt -c 4
++-+-+-+-+-+-++-+-+-+-+-+-+-+-+-+-+-+-++-+-+-+-+-+-+-+-+-+-+\
+
+./btool -b $(python3 -c 'print("\x41"*8 + "\x42"*8 + "\x43"*8 + "\x44"*8 + "\x45"*8 )') -o ABCDE.txt -c 4\
 [+] Read 40 bytes from stdin.
 
-\x41\x41\x41\x41
-\x41\x41\x41\x41
-\x42\x42\x42\x42
-\x42\x42\x42\x42
-\x43\x43\x43\x43
-\x43\x43\x43\x43
-\x44\x44\x44\x44
-\x44\x44\x44\x44
+
+\x41\x41\x41\x41\
+\x41\x41\x41\x41\
+\x42\x42\x42\x42\
+\x42\x42\x42\x42\
+\x43\x43\x43\x43\
+\x43\x43\x43\x43\
+\x44\x44\x44\x44\
+\x44\x44\x44\x44\
+\x45\x45\x45\x45\
 \x45\x45\x45\x45
-\x45\x45\x45\x45
+
 
 [+] Wrote 40 bytes to ABCDE.txt.
 
-6)
-TODO: Encryption.
++-+-+-+-+-+-++-+-+-+-+-+-+-+-+-+-+-+-++-+-+-+-+-+-+-+-+-+-+
