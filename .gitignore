@@ -9,7 +9,7 @@
 *.dylib
 *.swp
 *.txt
-
+*.swo
 # Test binary, built with `go test -c`
 *.test
 
