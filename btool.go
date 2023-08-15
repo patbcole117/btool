@@ -49,6 +49,7 @@ func main() {
         break
     case "xor":
         e_xor(&ar_b)
+        break
     }
 
     switch *pstr_dec {
@@ -56,6 +57,7 @@ func main() {
         break
     case "xor":
         d_xor(&ar_b)
+        break
     }
 
     printBytes(ar_b)
