@@ -80,7 +80,7 @@ Examples:\
 +-+-+-+-+-+-++-+-+-+-+-+-+-+-+-+-+-+-++-+-+-+-+-+-+-+-+-+-+
 
 
-./btool -i ABC-AES256 -d aes -o ABC.txt\
+./btool -i ABC-AES256.txt -d aes -o ABC.txt\
 [+] Read 220 bytes from ABC-AES256.txt.
 
 \x9c\xe9\x43\x3d\xcf\xeb\x07\xde\x69\x03\x5b\x91\x02\xd2\x29\xc6
