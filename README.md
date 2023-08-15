@@ -6,14 +6,6 @@ Examples:\
 #######################################################\
 +-+-+-+-+-+-++-+-+-+-+-+-+-+-+-+-+-+-++-+-+-+-+-+-+-+-+-+-+
 
-./btool -b "\x41\x41\x41\x41\x41\x41\x41\x41"\
-[+] Read 8 bytes from stdin.
-
-
-\x41\x41\x41\x41\x41\x41\x41\x41
-
-
-+-+-+-+-+-+-++-+-+-+-+-+-+-+-+-+-+-+-++-+-+-+-+-+-+-+-+-+-+
 
 ./btool -b "\x41\x41\x41\x41\x41\x41\x41\x41" -o A.txt\
 [+] Read 8 bytes from stdin.
@@ -27,26 +19,6 @@ Examples:\
 
 +-+-+-+-+-+-++-+-+-+-+-+-+-+-+-+-+-+-++-+-+-+-+-+-+-+-+-+-+
 
-./btool -i A.txt\
-[+] Read 8 bytes from A.txt.
-
-
-\x41\x41\x41\x41\x41\x41\x41\x41
-
-
-+-+-+-+-+-+-++-+-+-+-+-+-+-+-+-+-+-+-++-+-+-+-+-+-+-+-+-+-+
-
-./btool -i A.txt -o AAAAAAAA.txt\
-[+] Read 8 bytes from A.txt.
-
-
-\x41\x41\x41\x41\x41\x41\x41\x41
-
-
-[+] Wrote 8 bytes to AAAAAAAA.txt.
-
-
-+-+-+-+-+-+-++-+-+-+-+-+-+-+-+-+-+-+-++-+-+-+-+-+-+-+-+-+-+
 
 ./btool -b $(python3 -c 'print("\x41"*8 + "\x42"*8 + "\x43"*8 + "\x44"*8 + "\x45"*8 )') -o ABCDE.txt -c 4\
 [+] Read 40 bytes from stdin.
@@ -67,6 +39,7 @@ Examples:\
 [+] Wrote 40 bytes to ABCDE.txt.
 
 +-+-+-+-+-+-++-+-+-+-+-+-+-+-+-+-+-+-++-+-+-+-+-+-+-+-+-+-+
+
 
 ./btool -b $(python3 -c 'print("A"*64 + "\x42"*64 + "C"*64)') -e aes -o ABC-AES256.txt\
 [+] Read 192 bytes from stdin.
@@ -103,7 +76,9 @@ Examples:\
 
 [+] Wrote 220 bytes to ABC-AES256.txt.
 
+
 +-+-+-+-+-+-++-+-+-+-+-+-+-+-+-+-+-+-++-+-+-+-+-+-+-+-+-+-+
+
 
 ./btool -i ABC-AES256 -d aes -o ABC.txt
 [+] Read 220 bytes from ABC-AES256.txt.
@@ -139,3 +114,6 @@ Examples:\
 \x43\x43\x43\x43\x43\x43\x43\x43\x43\x43\x43\x43\x43\x43\x43\x43
 
 [+] Wrote 192 bytes to ABC.txt.
+
+
++-+-+-+-+-+-++-+-+-+-+-+-+-+-+-+-+-+-++-+-+-+-+-+-+-+-+-+-+
