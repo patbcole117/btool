@@ -42,25 +42,39 @@ func main() {
         fmt.Printf("[+] Read %d bytes from %s.\n", len(ar_b), *pstr_inFile)
     }
 
-    if *pstr_enc != "" {
-       //TODO ENCRYPT
-    } else if *pstr_dec != "" {
-       //TODO DECRYPT
+    printBytes(ar_b)
+
+    switch *pstr_enc {
+    case "":
+        break
+    case "xor":
+        e_xor(&ar_b)
     }
 
-    for i := 0; i < len(ar_b); i++ {
-        if i%(*pint_col) == 0 {
-            fmt.Println()
-        }
-        fmt.Printf("\\x%x", ar_b[i])
+    switch *pstr_dec {
+    case "":
+        break
+    case "xor":
+        d_xor(&ar_b)
     }
-    fmt.Printf("\n\n")
+
+    printBytes(ar_b)
 
     if *pstr_outFile != "" {
         err := os.WriteFile(*pstr_outFile, ar_b, 0600)
         checkErr(err)
         fmt.Printf("[+] Wrote %d bytes to %s.\n", len(ar_b), *pstr_outFile)
     }
+}
+
+func printBytes(ar_b []byte) {
+    for i := 0; i < len(ar_b); i++ {
+        if i%(*pint_col) == 0 {
+            fmt.Println()
+        }
+        fmt.Printf("\\x%02x", ar_b[i])
+    }
+    fmt.Printf("\n\n")
 }
 
 func checkErr(err error) {
@@ -80,11 +94,25 @@ func checkArgs(args []string) error{
 }
 
 // crypto
-func e_xor() {
+func e_xor(par_b *[]byte) {
+    var key string
+    fmt.Print("Key:") 
+    fmt.Scanln(&key)
 
+    for i := 0; i < len(*par_b); i++ {
+        (*par_b)[i] = (*par_b)[i] ^ key[i%len(key)]
+    }
+    fmt.Printf("[+] Encrypted %d bytes with key \"%s\"\n", len(*par_b), key)
 }
 
-func d_xor() {
+func d_xor(par_b *[]byte) {
+    var key string
+    fmt.Print("Key:") 
+    fmt.Scanln(&key)
 
+    for i := 0; i < len(*par_b); i++ {
+        (*par_b)[i] = (*par_b)[i] ^ key[i%len(key)]
+    }
+    fmt.Printf("[+] Decrypted %d bytes with key \"%s\"\n", len(*par_b), key)
 }
 
