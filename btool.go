@@ -47,7 +47,7 @@ func main() {
         *pstr_inFile))
     }
 
-    qPrint(printBytes(ar_b))
+    fmt.Println(printBytes(ar_b))
 
     switch *pstr_enc {
     case "":
@@ -97,7 +97,7 @@ func printBytes(ar_b []byte) string {
         }
         s = s + fmt.Sprintf("\\x%02x", ar_b[i])
     }
-    s = s + "\n\n"
+    s = s + "\n"
     return s
 }
 
