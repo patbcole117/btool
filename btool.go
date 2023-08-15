@@ -18,8 +18,8 @@ var pstr_bytes   = flag.String("b", "", "A string of bytes: \"\\x41\\x42...\"")
 var pstr_inFile  = flag.String("i", "", "Read bytes from file.")
 var pstr_outFile = flag.String("o", "", "Output to file.")
 var pint_col     = flag.Int("c", 16, "Output columns.")
-var pstr_enc     = flag.String("e", "", "Encrypt: xor.")
-var pstr_dec     = flag.String("d", "", "Decrypt: xor.")
+var pstr_enc     = flag.String("e", "", "Encrypt: xor, aes.")
+var pstr_dec     = flag.String("d", "", "Decrypt: xor, aes.")
 
 func main() {
 
