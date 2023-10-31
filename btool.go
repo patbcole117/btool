@@ -12,14 +12,17 @@ import (
 )
 
 var (
-    pbool_help   = flag.Bool("h", false, "Display usage.")
-    pbool_quiet  = flag.Bool("q", false, "Only print final bytes on one line.")
-    pstr_bytes   = flag.String("b", "", "A string of bytes: \"\\x41\\x42...\"")
-    pstr_inFile  = flag.String("i", "", "Read bytes from file.")
-    pstr_outFile = flag.String("o", "", "Output to file.")
-    pint_col     = flag.Int("c", 16, "Output columns.")
-    pstr_enc     = flag.String("e", "", "Encrypt: xor, aes.")
-    pstr_dec     = flag.String("d", "", "Decrypt: xor, aes.")
+    COLUMNS      = 16
+    flag_help   = flag.Bool("h", false, "Display usage.")
+    flag_quiet  = flag.Bool("q", false, "Only print final bytes on one line.")
+    flag_bytes   = flag.String("b", "", "A string of bytes: \"\\x41\\x42...\"")
+    flag_inFile  = flag.String("i", "", "Read bytes from file.")
+    flag_outFile = flag.String("o", "", "Output to file.")
+    flag_enc     = flag.String("e", "", "Encrypt: xor, aes.")
+    flag_dec     = flag.String("d", "", "Decrypt: xor, aes.")
+    
+    flag_cyclic  = flag.Int("c", 0, "Generate deBruijn pattern of length n")
+    flag_cyclen  = flag.String("p", "", "Find the offset of a substrinng in deBruijn.")
 
     ErrInvalidEnc   = errors.New("invalid encryption")
     ErrInvalidDec   = errors.New("invalid decryption")
@@ -30,73 +33,76 @@ func main() {
 
     args := os.Args
     flag.Parse()
-    if *pbool_help || len(args) < 2 {
+    if *flag_help || len(args) < 2 {
         flag.Usage()
         os.Exit(0)
     }
 
     err := checkArgs(args)
     checkErr(err)
-
-    ar_b := make([]byte, 0)
-    if *pstr_bytes != "" {
-        *pstr_bytes, err = strconv.Unquote(`"` + *pstr_bytes + `"`)
+    bytes := make([]byte, 0)
+    if *flag_bytes != "" {
+        *flag_bytes, err = strconv.Unquote(`"` + *flag_bytes + `"`)
         checkErr(err)
-        ar_b = []byte(*pstr_bytes)
-        qPrint(fmt.Sprintf("[+] Read %d bytes from stdin.\n", len(ar_b)))
+        bytes = []byte(*flag_bytes)
+        qPrint(fmt.Sprintf("[+] Read %d bytes from stdin.\n", len(bytes)))
 
-    } else if *pstr_inFile != "" {
-        ar_b, err = os.ReadFile(*pstr_inFile)
+    } else if *flag_inFile != "" {
+        bytes, err = os.ReadFile(*flag_inFile)
         checkErr(err)
-        qPrint(fmt.Sprintf("[+] Read %d bytes from %s.\n", len(ar_b),
-        *pstr_inFile))
+        qPrint(fmt.Sprintf("[+] Read %d bytes from %s.\n", len(bytes),
+        *flag_inFile))
     }
 
-    fmt.Println(printBytes(ar_b))
+    if !(*flag_quiet) {
+        fmt.Println(printBytes(bytes))
+    }
 
-    switch *pstr_enc {
+    switch *flag_enc {
     case "":
         break
     case "aes":
-        ar_b, err = e_aes(&ar_b)
+        bytes, err = e_aes(&bytes)
         checkErr(err)
     case "xor":
-        e_xor(&ar_b)
+        e_xor(&bytes)
     default:
         panic(ErrInvalidEnc)
     }
 
-    switch *pstr_dec {
+    switch *flag_dec {
     case "":
         break
     case "aes":
-        ar_b, err = d_aes(&ar_b)
+        bytes, err = d_aes(&bytes)
         checkErr(err)
     case "xor":
-        d_xor(&ar_b)
+        d_xor(&bytes)
     default:
         panic(ErrInvalidDec)
     }
 
-    if *pstr_dec != "" || *pstr_enc != "" {
-        fmt.Println(printBytes(ar_b))
+    if (*flag_dec != "" || *flag_enc != "") && !(*flag_quiet) {
+        fmt.Println(printBytes(bytes))
     }
 
-    if *pstr_outFile != "" {
-        err := os.WriteFile(*pstr_outFile, ar_b, 0600)
+    if *flag_outFile != "" {
+        err := os.WriteFile(*flag_outFile, bytes, 0600)
         checkErr(err)
-        qPrint(fmt.Sprintf("[+] Wrote %d bytes to %s.\n", len(ar_b),
-        *pstr_outFile))
+        qPrint(fmt.Sprintf("[+] Wrote %d bytes to %s.\n", len(bytes),
+        *flag_outFile))
     }
 }
 
-func printBytes(ar_b []byte) string {
+func printBytes(bytes []byte) string {
     s := ""
-    for i := 0; i < len(ar_b); i++ {
-        if i%(*pint_col) == 0 && !(*pbool_quiet) {
+    for i := 0; i < len(bytes); i++ {
+        if i%(COLUMNS) == 0 {
             s = s + "\n"
+        } else if i%(COLUMNS/2) == 0 {
+            s = s + " "
         }
-        s = s + fmt.Sprintf("\\x%02x", ar_b[i])
+        s = s + fmt.Sprintf("\\x%02x", bytes[i])
     }
     s = s + "\n"
     return s
@@ -110,8 +116,8 @@ func checkErr(err error) {
 
 func checkArgs(args []string) error{
 
-    if (*pstr_inFile != "" && *pstr_bytes != "") ||
-       (*pstr_enc != "" && *pstr_dec != "") {
+    if (*flag_inFile != "" && *flag_bytes != "") ||
+       (*flag_enc != "" && *flag_dec != "") {
         return ErrInvalidArgsGroup
     }
     return nil
@@ -127,33 +133,33 @@ func e_keygen(s int) ([]byte, error) {
     return k, nil
 }
 
-func e_xor(par_b *[]byte) {
+func e_xor(pbytes *[]byte) {
     var key string
     fmt.Print("Key:") 
     fmt.Scanln(&key)
 
-    for i := 0; i < len(*par_b); i++ {
-        (*par_b)[i] = (*par_b)[i] ^ key[i%len(key)]
+    for i := 0; i < len(*pbytes); i++ {
+        (*pbytes)[i] = (*pbytes)[i] ^ key[i%len(key)]
     }
     qPrint(fmt.Sprintf("[+] Encrypted %d bytes with key \"%s\"\n",
-    len(*par_b), key))
+    len(*pbytes), key))
     key = ""
 }
 
-func d_xor(par_b *[]byte) {
+func d_xor(pbytes *[]byte) {
     var key string
     fmt.Print("Key:") 
     fmt.Scanln(&key)
 
-    for i := 0; i < len(*par_b); i++ {
-        (*par_b)[i] = (*par_b)[i] ^ key[i%len(key)]
+    for i := 0; i < len(*pbytes); i++ {
+        (*pbytes)[i] = (*pbytes)[i] ^ key[i%len(key)]
     }
     qPrint(fmt.Sprintf("[+] Decrypted %d bytes with key \"%s\"\n",
-    len(*par_b), key))
+    len(*pbytes), key))
     key = ""
 }
 
-func e_aes(par_b *[]byte) ([]byte, error) {
+func e_aes(pbytes *[]byte) ([]byte, error) {
     key, err := e_keygen(32)
     if err != nil {
         return nil, err
@@ -180,15 +186,15 @@ func e_aes(par_b *[]byte) ([]byte, error) {
          return nil, err
     }
 
-    ar_b_ct := gcm.Seal(nonce, nonce, *par_b, nil)
+    bytes_ct := gcm.Seal(nonce, nonce, *pbytes, nil)
 
     qPrint(fmt.Sprintf("[+] Encrypted %d bytes with AES-256. Key is saved to "+
-    "\"a.key\". \n[+] Result is %d bytes.\n", len(*par_b), len(ar_b_ct)))
+    "\"a.key\". \n[+] Result is %d bytes.\n", len(*pbytes), len(bytes_ct)))
 
-    return ar_b_ct, nil
+    return bytes_ct, nil
 }
 
-func d_aes(par_b_ctnonce *[]byte) ([]byte, error) {
+func d_aes(pbytes_ctnonce *[]byte) ([]byte, error) {
     key, err := os.ReadFile("a.key")
     if err != nil {
         return nil, err
@@ -205,19 +211,19 @@ func d_aes(par_b_ctnonce *[]byte) ([]byte, error) {
     }
 
     nSize := gcm.NonceSize()
-    nonce, ar_b_ct :=  (*par_b_ctnonce)[:nSize], (*par_b_ctnonce)[nSize:]
+    nonce, bytes_ct :=  (*pbytes_ctnonce)[:nSize], (*pbytes_ctnonce)[nSize:]
 
-    ar_b_pt, err :=  gcm.Open(nil, nonce, ar_b_ct, nil)
+    bytes_pt, err :=  gcm.Open(nil, nonce, bytes_ct, nil)
     if err != nil {
         return nil, err
     }
     qPrint(fmt.Sprintf("[+] Decrypted %d bytes with AES-256. Key used was "+
-    "\"a.key\". \n[+] Result is %d bytes.\n", len(*par_b_ctnonce), len(ar_b_pt)))
-    return ar_b_pt, nil
+    "\"a.key\". \n[+] Result is %d bytes.\n", len(*pbytes_ctnonce), len(bytes_pt)))
+    return bytes_pt, nil
 }
 
 func qPrint(msg string) {
- if !(*pbool_quiet) {
+ if !(*flag_quiet) {
     fmt.Print(msg)
  }
 }
