@@ -15,7 +15,7 @@ import (
 
 var (
     COLUMNS      = 16
-    flag_help   = flag.Bool("h", false, "Display usage.")
+    flag_help    = flag.Bool("h", false, "Display usage.")
     flag_quiet   = flag.Bool("q", false, "Only print final bytes on one line.")
     flag_bytes   = flag.String("b", "", "A string of bytes: \"\\x41\\x42...\"")
     flag_inFile  = flag.String("i", "", "Read bytes from file.")
@@ -103,8 +103,8 @@ func main() {
         *flag_outFile))
     }
 }
-// Tools
 
+// Tools
 func deBruijn(size float64) []byte {
     n := 8
     k := int(math.Ceil(eighthRoot(size)))
